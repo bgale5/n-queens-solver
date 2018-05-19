@@ -29,3 +29,26 @@ Fitness State::fitness()
 	Fitness fit = {left_diagonal, right_diagonal, total};
 	return fit;
 }
+
+bool State::vacant_row(int row)
+{
+	for (int i = 0; i < n; i++)
+	{
+		if (queens[i] == row)
+			return false;
+	}
+	return true;
+}
+
+void State::randomize()
+{
+	for (int i = 0; i < n; i++)
+	{
+		int row;
+		do
+		{
+			row = rand() % n;
+		} while (!vacant_row(row));
+		queens[i] = row;
+	}
+}

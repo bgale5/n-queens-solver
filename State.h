@@ -3,6 +3,11 @@
 #include <vector>
 using Board = std::vector<unsigned int>;
 
+std::ostream& operator<<(std::ostream& strm, const State& s)
+{
+	return strm;
+}
+
 typedef struct fitness
 {
 	std::vector<int> left_diagonal;
@@ -17,6 +22,8 @@ class State
 	Board queens;
 	std::vector<Board> segments;
 	int n;
+	friend std::ostream& operator<<(std::ostream& strm, const State& s);
+	bool vacant_row(int row);
 	public:
 	/* Public Member Functions */
 
@@ -30,6 +37,10 @@ class State
 	 * O(n) implementation
 	 **/
 
+	/**
+	 * Fill board with random Queens
+	 * Produces no horizontal conflicts
+	 **/
 	void randomize();
 
 	Fitness fitness();
@@ -37,6 +48,8 @@ class State
 	void mutate();
 	
 	void shuffle_segments();
+
+	std::ostream& operator<<(const State&);
 
 	State operator+(const State&); // For the crossover
 };
