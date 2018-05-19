@@ -26,7 +26,10 @@ Fitness State::fitness()
 			counter += right_diagonal[i] - 1;
 		total += counter / (n - abs(i - n));
 	}
-	Fitness fit = {left_diagonal, right_diagonal, total};
+	Fitness fit;
+	fit.left_diagonal = left_diagonal;
+	fit.right_diagonal = right_diagonal;
+	fit.overall = total;
 	return fit;
 }
 
