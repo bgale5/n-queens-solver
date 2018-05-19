@@ -46,6 +46,8 @@ class State
 	
 	void shuffle_segments();
 
+	void print();
+
 	std::ostream& operator<<(const State&);
 
 	State operator+(const State&); // For the crossover

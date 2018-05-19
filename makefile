@@ -1,8 +1,8 @@
-FLAGS=-g -std=gnu++11 -Werror -Wall
+CFLAGS=-g -std=gnu++11 -Wall -Werror
 
-nqueens: main.o State.o
-	clang++ $(FLAGS) -o nqueens main.o state.o
-main.o: main.cpp State.h
-	clang++ $(FLAGS) -c main.cpp
-State.o:
-	clang++ $(FLAGS) -c State.cpp
+nqueens: main.o State.o state.h
+	clang++ $(CFLAGS) -o nqueens main.o state.o
+main.o: main.cpp State.h main.cpp
+	clang++ $(CFLAGS) -c main.cpp
+State.o: State.cpp
+	clang++ $(CFLAGS) -c State.cpp

@@ -3,6 +3,7 @@
 
 int main(int argc, char const *argv[])
 {
-	std::cout << "Test" << std::endl;
+	State test(4);
+	test.print();
 	return 0;
 }

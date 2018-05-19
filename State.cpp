@@ -1,5 +1,6 @@
 #include "State.h"
 #include <cstdlib>
+#include <iostream>
 State::State(int n)
 {
 	this->n = n;
@@ -53,5 +54,29 @@ void State::randomize()
 			row = rand() % n;
 		} while (!vacant_row(row));
 		queens[i] = row;
+	}
+}
+
+void State::print()
+{
+	std::cout << "Queens: " << std::endl;
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << queens[i] << ", ";
+	}
+	std::cout << std::endl;
+	std::vector<int> flipped(n);
+	for (int i = 0; i < n; i++)
+	{
+		flipped[queens[i]] = i;
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			std::cout << (j == queens[i] ? "Q" : "+");
+		}
+		std::cout << std::endl;
 	}
 }
