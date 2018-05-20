@@ -1,7 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
 #include <vector>
-using Board = std::vector<unsigned int>;
+using Board = std::vector<int>;
 
 
 /* Data Structures */
@@ -17,10 +17,10 @@ typedef struct fitness
 class State
 {
 	private:
-	Board queens;
+	std::vector<int> queens;
 	std::vector<Board> segments;
 	int n;
-	bool vacant_row(int row);
+	bool vacant_row(int row, int col);
 	public:
 	/* Public Member Functions */
 

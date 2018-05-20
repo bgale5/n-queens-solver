@@ -34,10 +34,12 @@ Fitness State::fitness()
 	return fit;
 }
 
-bool State::vacant_row(int row)
+bool State::vacant_row(int row, int col)
 {
 	for (int i = 0; i < n; i++)
 	{
+		if (row == col)
+			continue;
 		if (queens[i] == row)
 			return false;
 	}
@@ -48,35 +50,35 @@ void State::randomize()
 {
 	for (int i = 0; i < n; i++)
 	{
-		int row;
-		do
+		int stuck = 0;
+		int row = rand() % n;
+		while(!vacant_row(row, i))
 		{
 			row = rand() % n;
-		} while (!vacant_row(row));
+			stuck++;
+		}
+		stuck = 0;
 		queens[i] = row;
+		int a, b, c, d;
+		a = queens[0];
+		b = queens[1];
+		c = queens[2];
+		d = queens[3];
+		queens[0] = 0;
+		queens[1] = 0;
+		queens[2] = 0;
+		queens[3] = 3;
 	}
 }
 
 void State::print()
 {
-	std::cout << "Queens: " << std::endl;
-	for (int i = 0; i < n; i++)
-	{
-		std::cout << queens[i] << ", ";
-	}
-	std::cout << std::endl;
-	std::vector<int> flipped(n);
-	for (int i = 0; i < n; i++)
-	{
-		flipped[queens[i]] = i;
-	}
-
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++)
 		{
-			std::cout << (j == queens[i] ? "Q" : "+");
+			std::cout << (queens[j] == i ? "Q   " : "*   ");
 		}
-		std::cout << std::endl;
+		std::cout << std::endl << std::endl;;
 	}
 }
