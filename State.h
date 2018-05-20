@@ -48,8 +48,6 @@ class State
 
 	void print();
 
-	std::ostream& operator<<(const State&);
-
 	State operator+(const State&); // For the crossover
 };
 
