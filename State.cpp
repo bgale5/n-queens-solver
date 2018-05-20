@@ -38,7 +38,7 @@ bool State::vacant_row(int row, int col)
 {
 	for (int i = 0; i < n; i++)
 	{
-		if (row == col)
+		if (i == col)
 			continue;
 		if (queens[i] == row)
 			return false;
@@ -64,10 +64,6 @@ void State::randomize()
 		b = queens[1];
 		c = queens[2];
 		d = queens[3];
-		queens[0] = 0;
-		queens[1] = 0;
-		queens[2] = 0;
-		queens[3] = 3;
 	}
 }
 
@@ -79,6 +75,6 @@ void State::print()
 		{
 			std::cout << (queens[j] == i ? "Q   " : "*   ");
 		}
-		std::cout << std::endl << std::endl;;
+		std::cout << std::endl << std::endl;
 	}
 }
