@@ -1,45 +1,46 @@
 #include "State.h"
 #include <cstdlib>
 #include <iostream>
+
 State::State(int n)
 {
 	this->n = n;
-	queens.reserve(n);
-	//this->randomize();
+	queens.resize(n);
+	randomize();
+	//compute_fitness();
 }
 
 State::State(const State& s)
 {
 	n = s.n;
-	queens.reserve(n);
+	queens.resize(n);
 	for (int i=0; i<s.n; i++)
 		queens[i] = s.queens[i];
+	compute_fitness();
 }
 
-Fitness State::fitness()
+void State::compute_fitness()
 {
-	std::vector<int> left_diagonal(2*n-1);
-	std::vector<int> right_diagonal(2*n-1);
-	for (int i = 0; i <= n; ++i)
+	fitness.left_diagonal.resize(2*n-1, 0);
+	fitness.right_diagonal.resize(2*n-1, 0);
+	fitness.overall = 0;
+	for (int i = 1; i < n; ++i)
 	{
-		left_diagonal[i + queens[i]]++;
-		right_diagonal[n - i +queens[i]];
+		fitness.left_diagonal[i+queens[i]]++;
+		fitness.right_diagonal[n-i+queens[i]]++;
 	}
 	int counter = 0;
 	int total = 0;
-	for (int i = 0; i < 2*n-1; ++i)
+	for (int i = 1; i < 2*n-1; i++)
 	{
-		if (left_diagonal[i] > 1)
-			counter += left_diagonal[i] - 1;
-		if (right_diagonal[i] > 1)
-			counter += right_diagonal[i] - 1;
-		total += counter / (n - abs(i - n));
+		counter = 0;
+		if (fitness.left_diagonal[i] > 1)
+			counter += fitness.left_diagonal[i] - 1;
+		if (fitness.right_diagonal[i] > 1)
+			counter += fitness.right_diagonal[i] - 1;
+		total += counter / (n - abs(i - n)); // Normalise
 	}
-	Fitness fit;
-	fit.left_diagonal = left_diagonal;
-	fit.right_diagonal = right_diagonal;
-	fit.overall = total;
-	return fit;
+	fitness.overall = total;
 }
 
 bool State::vacant_row(int row, int col)
@@ -67,26 +68,7 @@ void State::randomize()
 		}
 		stuck = 0;
 		queens[i] = row;
-		int a, b, c, d;
-		a = queens[0];
-		b = queens[1];
-		c = queens[2];
-		d = queens[3];
 	}
-}
-
-State State::operator<<(const State& s)
-{
-	State child(n); // Start with a copy of the current state.
-	child.queens = this->queens;
-	//int l = 1 + rand() % (n - 1);
-	//int r = 1 + rand() % (n - 1);
-	int l = 1;
-	int r = 4;
-	if (r < l)
-		std::swap(l, r);
-	std::copy(s.queens.begin()+l, s.queens.begin()+r, child.queens.begin()+l);
-	return child;
 }
 
 void State::operator=(const State& s)
@@ -95,6 +77,7 @@ void State::operator=(const State& s)
 	queens.resize(s.n);
 	for (int i=0; i<s.n; i++)
 		queens[i] = s.queens[i];
+	compute_fitness();
 }
 
 void State::print()
@@ -105,7 +88,13 @@ void State::print()
 			std::cout << (queens[j] == i ? "Q   " : "*   ");
 		std::cout << std::endl << std::endl;
 	}
-	for (int i = 0; i < n; i++)
-		std::cout << queens[i] << ", ";
-	std::cout << std::endl;
+	print_vect(queens);
+}
+
+void State::print_vect(const std::vector<int>& v)
+{
+	std::cout << "[" << std::endl;
+	for (auto& val : v)
+		std::cout << val << ", " << std::endl;
+	std::cout << "]" << std::endl;
 }

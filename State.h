@@ -10,19 +10,24 @@ typedef struct fitness
 	std::vector<int> left_diagonal;
 	std::vector<int> right_diagonal;
 	int overall = 0;
-
 } Fitness;
 
 /* The State class represents a board configuration */
 class State
 {
 	private:
+	/* State data */
 	std::vector<int> queens;
-	int n;
-	bool vacant_row(int row, int col);
-	public:
-	/* Public Member Functions */
 
+	/* Helper functions */
+	bool vacant_row(int row, int col);
+	void print_vect(const std::vector<int>& v);
+
+	public:
+	/* Member variables */
+	Fitness fitness;
+	int n;
+	/* Public Member Functions */
 	/**
 	 * Constructor initialises the board with random queen positions
 	 **/
@@ -38,7 +43,7 @@ class State
 	 * Fitness value is normalised with respect to length of diagonals
 	 * O(n) implementation
 	 **/
-	Fitness fitness();
+	void compute_fitness();
 
 	/**
 	 * Fill board with random Queens
