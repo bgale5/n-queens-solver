@@ -18,7 +18,6 @@ class State
 {
 	private:
 	std::vector<int> queens;
-	std::vector<Board> segments;
 	int n;
 	bool vacant_row(int row, int col);
 	public:
@@ -28,6 +27,12 @@ class State
 	 * Constructor initialises the board with random queen positions
 	 **/
 	State(int n);
+
+	/**
+	 * Copy constructor for initialising with another object
+	 **/
+	State(const State& s);
+
 	/**
 	 * Returns the number of diagonal conflicts
 	 * Fitness value is normalised with respect to length of diagonals
@@ -48,7 +53,9 @@ class State
 
 	void print();
 
-	State operator+(const State&); // For the crossover
+	State operator<<(const State& s); // For the crossover
+	State operator^(const State& s); // For other crossover method
+	void operator=(const State& s); // For assignment
 };
 
 #endif

@@ -3,14 +3,12 @@
 
 int main(int argc, char const *argv[])
 {
-	State test1(6);
-	test1.print();
-	std::cout << std::endl;
-	State test2(6);
-	test2.print();
-	std::cout << std::endl;
-	State test3(6);
-	test3.print();
-	std::cout << std::endl;
-	return 0;
+State test(5);
+test.randomize();
+State test1(5);
+test1.randomize();
+test1 = test;
+test.print();
+test1.print();
+return 0;
 }

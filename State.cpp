@@ -4,8 +4,16 @@
 State::State(int n)
 {
 	this->n = n;
-	this->queens.reserve(n);
-	this->randomize();
+	queens.reserve(n);
+	//this->randomize();
+}
+
+State::State(const State& s)
+{
+	n = s.n;
+	queens.reserve(n);
+	for (int i=0; i<s.n; i++)
+		queens[i] = s.queens[i];
 }
 
 Fitness State::fitness()
@@ -67,14 +75,37 @@ void State::randomize()
 	}
 }
 
+State State::operator<<(const State& s)
+{
+	State child(n); // Start with a copy of the current state.
+	child.queens = this->queens;
+	//int l = 1 + rand() % (n - 1);
+	//int r = 1 + rand() % (n - 1);
+	int l = 1;
+	int r = 4;
+	if (r < l)
+		std::swap(l, r);
+	std::copy(s.queens.begin()+l, s.queens.begin()+r, child.queens.begin()+l);
+	return child;
+}
+
+void State::operator=(const State& s)
+{
+	n = s.n;
+	queens.resize(s.n);
+	for (int i=0; i<s.n; i++)
+		queens[i] = s.queens[i];
+}
+
 void State::print()
 {
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++)
-		{
 			std::cout << (queens[j] == i ? "Q   " : "*   ");
-		}
 		std::cout << std::endl << std::endl;
 	}
+	for (int i = 0; i < n; i++)
+		std::cout << queens[i] << ", ";
+	std::cout << std::endl;
 }
