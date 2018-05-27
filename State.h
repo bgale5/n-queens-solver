@@ -9,6 +9,8 @@ typedef struct fitness
 {
 	std::vector<int> left_diagonal;
 	std::vector<int> right_diagonal;
+	int left_total = 0;
+	int right_total = 0;
 	int overall = 0;
 } Fitness;
 
@@ -20,7 +22,8 @@ class State
 	std::vector<int> queens;
 
 	/* Helper functions */
-	bool vacant_row(int row, int col);
+	bool vacant_row(int row, int exclude_col);
+	void fill_gaps();
 	
 
 	public:
@@ -32,11 +35,11 @@ class State
 	 * Constructor initialises the board with random queen positions
 	 **/
 	State(int n);
-	static void print_vect(const std::vector<int>& v);
+	static void print_vect(const std::vector<int> &v);
 	/**
 	 * Copy constructor for initialising with another object
 	 **/
-	State(const State& s);
+	State(const State &s);
 
 	/**
 	 * Returns the number of diagonal conflicts
@@ -51,16 +54,13 @@ class State
 	 **/
 	void randomize();
 
-
 	void mutate();
-	
-	void shuffle_segments();
+
+	void absorb(const State &parent1, const State &parent2);
 
 	void print();
-
-	State operator<<(const State& s); // For the crossover
-	State operator^(const State& s); // For other crossover method
-	void operator=(const State& s); // For assignment
+	
+	void operator=(const State &s); // For assignment
 };
 
 #endif

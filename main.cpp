@@ -3,15 +3,18 @@
 
 int main(int argc, char const *argv[])
 {
-	State test(6);
-	test.randomize();
-	test.print();
-	test.compute_fitness();
-	Fitness fit = test.fitness;
-	std::cout << "Left diagonal:" << std::endl;
-	State::print_vect(fit.left_diagonal);
-	std::cout << "Right diagonal:" << std::endl;
-	State::print_vect(fit.right_diagonal);
-	std::cout << "Overall fitness: " << fit.overall << std::endl;
+	srand(time(NULL));
+	State s1(20);
+	State s2(20);
+	State s3(20);
+	std::cout << "S1: " << std::endl;
+	s1.print();
+	std::cout << "S2: " << std::endl;
+	s2.print();
+	// std::cout << "S3: " << std::endl;
+	// s3.print();
+	s3.absorb(s2, s1);
+	std::cout << "S3 After Absorbtion:" << std::endl;
+	s3.print();
 	return 0;
 }
