@@ -21,7 +21,7 @@ class State
 
 	/* Helper functions */
 	bool vacant_row(int row, int col);
-	void print_vect(const std::vector<int>& v);
+	
 
 	public:
 	/* Member variables */
@@ -32,7 +32,7 @@ class State
 	 * Constructor initialises the board with random queen positions
 	 **/
 	State(int n);
-
+	static void print_vect(const std::vector<int>& v);
 	/**
 	 * Copy constructor for initialising with another object
 	 **/

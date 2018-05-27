@@ -24,23 +24,18 @@ void State::compute_fitness()
 	fitness.left_diagonal.resize(2*n-1, 0);
 	fitness.right_diagonal.resize(2*n-1, 0);
 	fitness.overall = 0;
-	for (int i = 1; i < n; ++i)
+	for (int i = 0; i < n; ++i)
 	{
 		fitness.left_diagonal[i+queens[i]]++;
-		fitness.right_diagonal[n-i+queens[i]]++;
+		fitness.right_diagonal[(n-1)-i+queens[i]]++;
 	}
-	int counter = 0;
-	int total = 0;
-	for (int i = 1; i < 2*n-1; i++)
+	for (int i = 0; i < 2*n-1; i++)
 	{
-		counter = 0;
 		if (fitness.left_diagonal[i] > 1)
-			counter += fitness.left_diagonal[i] - 1;
+			fitness.overall += fitness.left_diagonal[i] - 1;
 		if (fitness.right_diagonal[i] > 1)
-			counter += fitness.right_diagonal[i] - 1;
-		total += counter / (n - abs(i - n)); // Normalise
+			fitness.overall += fitness.right_diagonal[i] - 1;
 	}
-	fitness.overall = total;
 }
 
 bool State::vacant_row(int row, int col)
@@ -94,7 +89,7 @@ void State::print()
 void State::print_vect(const std::vector<int>& v)
 {
 	std::cout << "[" << std::endl;
-	for (auto& val : v)
+	for (const auto& val : v)
 		std::cout << val << ", " << std::endl;
 	std::cout << "]" << std::endl;
 }
