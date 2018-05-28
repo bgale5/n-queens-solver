@@ -4,7 +4,8 @@
 
 int main(int argc, char const *argv[])
 {
-	Ga solver(20, 20, 10000);
-	solver.run();
+	Ga solver(30, 100, 1000);
+	unsigned generations = solver.run();
+	std::cout << "Solution found in " << generations << " iterations" << std::endl;
 	return 0;
 }

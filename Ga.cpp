@@ -35,8 +35,8 @@ void Ga::crossover_all()
 
 void Ga::mutate_all()
 {
-	for (auto &state : population)
-		state->mutate();
+	for (unsigned i = 0; i < pool_size; i++)
+		population[i]->mutate((i + 1) / (double)(pool_size * 100));
 }
 
 bool comp(const State_ptr s1, const State_ptr s2)
@@ -44,17 +44,25 @@ bool comp(const State_ptr s1, const State_ptr s2)
 	return s1->fitness.overall < s2->fitness.overall;
 }
 
-void Ga::run()
+unsigned Ga::run()
 {
-	for(unsigned generation = 0; generation < max_generations; generation++)
+	unsigned generation;
+	for(generation = 0; generation < max_generations; generation++)
 	{
+		if (generation % 100 == 0 && generation > 1)
+		{
+			std::cout << "Generation: " << generation << std::endl;
+			world_best->print();
+		}
 		crossover_all();
 		mutate_all();
 		std::sort(population.begin(), population.end(), comp);
+		population[pool_size - 1]->randomize();
 		world_best = population[0];
 		if (world_best->fitness.overall == 0)
 			break;
 	}
 	std::cout << "Best State:" << std::endl;
 	world_best->print();
+	return generation;
 }

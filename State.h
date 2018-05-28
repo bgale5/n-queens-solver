@@ -25,6 +25,7 @@ class State
 	bool vacant_row(int row, int exclude_col);
 	void fill_gaps();
 	void copy_fitness(const State &s);
+	unsigned State::subset_fitness(std::vector<int>::iterator start, std::vector<int>::iterator end);
 
 	
 
@@ -56,7 +57,7 @@ class State
 	 **/
 	void randomize();
 
-	void mutate();
+	void mutate(double chance);
 
 	void absorb(const State &parent1, const State &parent2);
 

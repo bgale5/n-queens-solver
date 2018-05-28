@@ -17,7 +17,7 @@ class Ga
 
 	/* Member Functions */
 	Ga(unsigned n, unsigned pop_size, unsigned max_genrations);
-	void run();
+	unsigned run();
 	void init_population();
 	static State *find_best_state(std::vector<State> pop);
 	void crossover_all();

@@ -2,7 +2,9 @@
 #include <cstdlib>
 #include <iostream>
 
-const double MUTATION_RATE = 0.1;
+const double MUTATE_REVERSE_RATE = 0.3;
+const double MUTATE_SHUFFLE_RATE = 0.3;
+using vect_iter = std::vector<int>::iterator;
 
 State::State(int n)
 {
@@ -48,6 +50,30 @@ void State::compute_fitness()
 	}
 }
 
+unsigned State::subset_fitness(vect_iter start, vect_iter end)
+{
+	unsigned dist = std::distance(start, end);
+	std::vector<int> left_diag;
+	std::vector<int> right_diag;
+	left_diag.resize(2 * dist - 1, 0);
+	right_diag.resize(2 * dist - 1, 0);
+	unsigned overall = 0;
+	for (vect_iter i = start; i <= end; i++)
+	{
+		unsigned col = std::distance(start, i);
+		left_diag[col + queens[col]]++;
+		right_diag[(dist - 1) - col + queens[col]]++;
+	}
+	for (unsigned i = 0; i < 2 * dist - 1; i++)
+	{
+		if (left_diag[i] > 1)
+			overall += left_diag[i] - 1;
+		if (right_diag[i] > 1)
+			overall += right_diag[i] - 1;
+	}
+	return overall;
+}
+
 bool State::vacant_row(int row, int exclude_col)
 {
 	for (int i = 0; i < n; i++)
@@ -70,11 +96,10 @@ void State::randomize()
 	compute_fitness();
 }
 
-void State::mutate()
+void State::mutate(double chance)
 {
-	double chance = (double)rand() / (double)RAND_MAX;
-	if (chance > MUTATION_RATE)
-		std::reverse(queens.begin(), queens.end());
+	if (rand() % 100 < chance)
+		std::random_shuffle(queens.begin(), queens.end());	
 	compute_fitness();
 }
 
@@ -117,8 +142,12 @@ void State::print()
 void State::print_vect(const std::vector<int> &v)
 {
 	std::cout << "[" << std::endl;
-	for (const auto &val : v)
-		std::cout << val << ", " << std::endl;
+	for (unsigned i = 0; i < v.size(); i++)
+	{
+		std::cout << v[i] << ", ";
+		if (i % 10 == 0 && i > 1)
+			std::cout << std::endl;
+	}
 	std::cout << "]" << std::endl;
 }
 
@@ -138,28 +167,35 @@ void State::fill_gaps()
 void State::absorb(const State &parent1, const State &parent2)
 {
 	
-	std::fill(queens.begin(), queens.end(), -1);
-	const State *best = &parent1, *worst = &parent2;
-	for (int i = 0; i < n*2-1; i++)
-	{
-		int wfl = worst->fitness.left_diagonal[i];
-		int bfl = best->fitness.left_diagonal[i];
-		if ((wfl < bfl && wfl > 0) || (wfl == 1) || bfl == 0)
-		{
-			std::swap(best, worst);
-			//std::cout << "Diag: " << i << " Best: " << best << std::endl;
-		}
-		for (int j=0; j < n; j++)
-		{
-			int row = i - j;
-			if (row < 0)
-				break; // This diagonal is done.
-			if (row >= n)
-				continue; // Diagonal hasn't begun yet.
-			if (best->queens[j] == row && vacant_row(row, j))
-				queens[j] = row;
-		}
-	}
-	fill_gaps();
-	compute_fitness();
 }
+
+// void State::absorb(const State &parent1, const State &parent2)
+// {
+	
+// 	std::fill(queens.begin(), queens.end(), -1);
+// 	State par2 = parent2;
+// 	std::reverse(par2.queens.begin(), par2.queens.end());
+// 	const State *best = &par2, *worst = &parent1;
+// 	for (int i = 0; i < n*2-1; i++)
+// 	{
+// 		int wfl = worst->fitness.left_diagonal[i];
+// 		int bfl = best->fitness.left_diagonal[i];
+// 		if ((wfl < bfl && wfl > 0) || (wfl == 1) || bfl == 0)
+// 		{
+// 			std::swap(best, worst);
+// 			//std::cout << "Diag: " << i << " Best: " << best << std::endl;
+// 		}
+// 		for (int j=0; j < n; j++)
+// 		{
+// 			int row = i - j;
+// 			if (row < 0)
+// 				break; // This diagonal is done.
+// 			if (row >= n)
+// 				continue; // Diagonal hasn't begun yet.
+// 			if (best->queens[j] == row && vacant_row(row, j))
+// 				queens[j] = row;
+// 		}
+// 	}
+// 	fill_gaps();
+// 	compute_fitness();
+// }
