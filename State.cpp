@@ -2,21 +2,21 @@
 #include <cstdlib>
 #include <iostream>
 
+const double MUTATION_RATE = 0.1;
+
 State::State(int n)
 {
 	this->n = n;
 	queens.resize(n);
 	randomize();
-	compute_fitness();
 }
-
 State::State(const State &s)
 {
 	n = s.n;
 	queens.resize(n);
 	for (int i=0; i<s.n; i++)
 		queens[i] = s.queens[i];
-	compute_fitness();
+	copy_fitness(s);
 }
 
 void State::compute_fitness()
@@ -26,6 +26,8 @@ void State::compute_fitness()
 	std::fill(fitness.left_diagonal.begin(), fitness.left_diagonal.end(), 0);
 	std::fill(fitness.right_diagonal.begin(), fitness.right_diagonal.end(), 0);
 	fitness.overall = 0;
+	fitness.left_total = 0;
+	fitness.right_total = 0;
 	for (int i = 0; i < n; ++i)
 	{
 		fitness.left_diagonal[i+queens[i]]++;
@@ -65,6 +67,15 @@ void State::randomize()
 			row = rand() % n;
 		queens[i] = row;
 	}
+	compute_fitness();
+}
+
+void State::mutate()
+{
+	double chance = (double)rand() / (double)RAND_MAX;
+	if (chance > MUTATION_RATE)
+		std::reverse(queens.begin(), queens.end());
+	compute_fitness();
 }
 
 void State::operator=(const State &s)
@@ -73,7 +84,21 @@ void State::operator=(const State &s)
 	queens.resize(s.n);
 	for (int i=0; i<s.n; i++)
 		queens[i] = s.queens[i];
-	compute_fitness();
+	copy_fitness(s);
+}
+
+void State::copy_fitness(const State &s)
+{
+	fitness.overall = s.fitness.overall;
+	fitness.left_total = s.fitness.left_total;
+	fitness.right_total = s.fitness.right_total;
+	fitness.left_diagonal.resize(s.fitness.left_diagonal.size());
+	fitness.right_diagonal.resize(s.fitness.right_diagonal.size());
+	for (int i = 0; i < s.n * 2 - 1; i++)
+	{
+		fitness.left_diagonal[i] = s.fitness.left_diagonal[i];
+		fitness.right_diagonal[i] = s.fitness.right_diagonal[i];
+	}
 }
 
 void State::print()

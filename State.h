@@ -1,17 +1,17 @@
 #ifndef STATE_H
 #define STATE_H
 #include <vector>
-using Board = std::vector<int>;
 
+using Board = std::vector<int>;
 
 /* Data Structures */
 typedef struct fitness
 {
 	std::vector<int> left_diagonal;
 	std::vector<int> right_diagonal;
-	int left_total = 0;
-	int right_total = 0;
-	int overall = 0;
+	int left_total;
+	int right_total;
+	int overall;
 } Fitness;
 
 /* The State class represents a board configuration */
@@ -24,6 +24,8 @@ class State
 	/* Helper functions */
 	bool vacant_row(int row, int exclude_col);
 	void fill_gaps();
+	void copy_fitness(const State &s);
+
 	
 
 	public:
