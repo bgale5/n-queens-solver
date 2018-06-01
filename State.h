@@ -7,11 +7,9 @@ using Board = std::vector<int>;
 /* Data Structures */
 typedef struct fitness
 {
-	std::vector<int> left_diagonal;
-	std::vector<int> right_diagonal;
-	int left_total;
-	int right_total;
-	int overall;
+	unsigned left_total;
+	unsigned right_total;
+	unsigned overall;
 } Fitness;
 
 /* The State class represents a board configuration */
@@ -20,12 +18,12 @@ class State
 	private:
 	/* State data */
 	std::vector<int> queens;
+	int subset_divisor;
 
 	/* Helper functions */
-	bool vacant_row(int row, int exclude_col);
-	void fill_gaps();
+	//bool vacant_row(int row, int exclude_col);
+	//void fill_gaps();
 	void copy_fitness(const State &s);
-	unsigned State::subset_fitness(std::vector<int>::iterator start, std::vector<int>::iterator end);
 
 	
 
@@ -37,7 +35,7 @@ class State
 	/**
 	 * Constructor initialises the board with random queen positions
 	 **/
-	State(int n);
+	State(int n, int subset_divisor);
 	static void print_vect(const std::vector<int> &v);
 	/**
 	 * Copy constructor for initialising with another object
@@ -59,7 +57,9 @@ class State
 
 	void mutate(double chance);
 
-	void absorb(const State &parent1, const State &parent2);
+	//void absorb_diagonal(const State &parent1, const State &parent2);
+	void absorb(State parent1, State parent2);
+	
 
 	void print();
 	
