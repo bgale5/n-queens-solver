@@ -18,13 +18,13 @@ class State
 	private:
 	/* State data */
 	std::vector<int> queens;
-	std::vector<bool> occupied_rows;
+	std::vector<int> occupied_rows;
 
 	/* Helper functions */
 	//bool vacant_row(int row, int exclude_col);
-	//void fill_gaps();
+	//void validate();
 	int random_vacant_row();
-	void fill_gaps();
+	void validate();
 
 
 	public:

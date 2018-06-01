@@ -10,14 +10,14 @@ State::State(int n)
 {
 	this->n = n;
 	queens.resize(n);
-	occupied_rows.resize(n, false);
+	occupied_rows.resize(n, 0);
 	randomize();
 }
 State::State(const State &s)
 {
 	n = s.n;
 	queens.resize(n);
-	occupied_rows.resize(n, false);
+	occupied_rows.resize(n, 0);
 	fitness.overall = s.fitness.overall;
 	fitness.left_total = s.fitness.left_total;
 	fitness.right_total = s.fitness.right_total;
@@ -32,7 +32,7 @@ void State::operator=(const State &s)
 {
 	n = s.n;
 	queens.resize(s.n);
-	occupied_rows.resize(n, false);
+	occupied_rows.resize(n, 0);
 	fitness.overall = s.fitness.overall;
 	fitness.left_total = s.fitness.left_total;
 	fitness.right_total = s.fitness.right_total;
@@ -74,18 +74,17 @@ void State::compute_fitness()
 void State::move(int index, int row)
 {
 	if (queens[index] != -1)
-		occupied_rows[queens[index]] = false;
+		occupied_rows[queens[index]]--;
 	queens[index] = row;
-	occupied_rows[row] = true;
+	occupied_rows[row]++;
 }
 
 void State::randomize()
 {
 	for (int i = 0; i < n; i++)
 		queens[i] = i;
-	occupied_rows.resize(n, false);
 	std::random_shuffle(queens.begin(), queens.end());
-	std::fill(occupied_rows.begin(), occupied_rows.end(), true);
+	std::fill(occupied_rows.begin(), occupied_rows.end(), 1);
 	compute_fitness();
 }
 
@@ -127,22 +126,16 @@ void State::print_vect(const std::vector<int> &v)
 void State::absorb(State parent1, State parent2)
 {
 	std::fill(queens.begin(), queens.end(), -1);
-	std::fill(occupied_rows.begin(), occupied_rows.end(), false);
+	std::fill(occupied_rows.begin(), occupied_rows.end(), 0);
 	if (parent1.fitness.right_total < parent1.fitness.left_total)
 		parent1.flip();
 	if (parent2.fitness.right_total < parent2.fitness.left_total)
 		parent2.flip();
 	for (int i = 0; i < n / 2; i++)
-	{
-		if(~vacant(queens[i]))
-			move(i, parent1.queens[i]);
-	}
+		move(i, parent1.queens[i]);
 	for (int i = n / 2; i < n; i++)
-	{
-		if (~vacant(queens[i]))
-			move(i, parent2.queens[i]);
-	}
-	fill_gaps();
+		move(i, parent2.queens[i]);
+	validate();
 	compute_fitness();
 }
 
@@ -152,16 +145,20 @@ int State::random_vacant_row()
 	do
 	{
 		row = (row + 1) % n;
-	} while (occupied_rows[row] != false);
+	} while (occupied_rows[row] != 0);
 	return row;
 }
 
-void State::fill_gaps()
+void State::validate()
 {
-	for (int col = 0; col < n; col++)
+	std::vector<int> indices;
+	for (int i = 0; i < n; i++)
+		indices.push_back(i); 
+	std::random_shuffle(indices.begin(), indices.end()); // Random order to remove bias
+	for (int &i : indices)
 	{
-		if (queens[col] == -1)
-			move(col, random_vacant_row());
+		if (occupied_rows[queens[i]] > 1)
+			move(i, random_vacant_row());
 	}
 }
 
