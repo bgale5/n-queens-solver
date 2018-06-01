@@ -9,7 +9,6 @@ class Ga
 	/* Member Variables */
 	int pop_size;
 	int pool_size;
-	int segment_divisor;
 	int n;
 	int max_generations;
 	std::vector<std::shared_ptr<State> > population;
@@ -17,7 +16,7 @@ class Ga
 	std::shared_ptr<State> world_best;
 
 	/* Member Functions */
-	Ga(int n, int pop_size, int max_genrations, int segment_divisor);
+	Ga(int n, int pop_size, int max_genrations);
 	int run();
 	void init_population();
 	static State *find_best_state(std::vector<State> pop);

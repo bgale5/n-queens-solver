@@ -6,35 +6,41 @@ const double MUTATE_REVERSE_RATE = 0.3;
 const double MUTATE_SHUFFLE_RATE = 0.3;
 using vect_iter = std::vector<int>::iterator;
 
-State::State(int n, int subset_divisor)
+State::State(int n)
 {
 	this->n = n;
-	this->subset_divisor = subset_divisor;
 	queens.resize(n);
+	occupied_rows.resize(n, false);
 	randomize();
 }
 State::State(const State &s)
 {
 	n = s.n;
-	subset_divisor = s.subset_divisor;
 	queens.resize(n);
+	occupied_rows.resize(n, false);
 	fitness.overall = s.fitness.overall;
 	fitness.left_total = s.fitness.left_total;
 	fitness.right_total = s.fitness.right_total;
 	for (int i=0; i<s.n; i++)
+	{
 		queens[i] = s.queens[i];
+		occupied_rows[i] = s.occupied_rows[i];
+	}
 }
 
 void State::operator=(const State &s)
 {
 	n = s.n;
-	subset_divisor = s.subset_divisor;
 	queens.resize(s.n);
+	occupied_rows.resize(n, false);
 	fitness.overall = s.fitness.overall;
 	fitness.left_total = s.fitness.left_total;
 	fitness.right_total = s.fitness.right_total;
 	for (int i=0; i<s.n; i++)
+	{
 		queens[i] = s.queens[i];
+		occupied_rows[i] = s.occupied_rows[i];
+	}
 }
 
 void State::compute_fitness()
@@ -63,28 +69,23 @@ void State::compute_fitness()
 		if (right_diagonal[i] > 1)
 			fitness.overall += right_diagonal[i] - 1;
 	}
-	// Horizontal conflicts
-	for (int i = 0; i < n - 1; i++)
-	{
-		for (int j = i + 1; j < n; j++)
-		{
-			if (queens[i] == queens[j])
-				{
-					fitness.overall++;
-					if (i < n / 2 && j < n / 2)
-						fitness.left_total++;
-					else if (i > n / 2 && j > n / 2)
-						fitness.right_total++;
-				}
-		}
-	}
+}
+
+void State::move(int index, int row)
+{
+	if (queens[index] != -1)
+		occupied_rows[queens[index]] = false;
+	queens[index] = row;
+	occupied_rows[row] = true;
 }
 
 void State::randomize()
 {
 	for (int i = 0; i < n; i++)
 		queens[i] = i;
+	occupied_rows.resize(n, false);
 	std::random_shuffle(queens.begin(), queens.end());
+	std::fill(occupied_rows.begin(), occupied_rows.end(), true);
 	compute_fitness();
 }
 
@@ -92,8 +93,9 @@ void State::mutate(double chance)
 {
 	if (rand() % 100 < chance)
 	{
-		queens[rand() % n] = rand() % n;
-		compute_fitness();
+		vect_iter first = queens.begin() + rand() % n;
+		vect_iter second = queens.begin() + rand() % n;
+		std::swap(first, second);
 	}
 }
 
@@ -125,13 +127,53 @@ void State::print_vect(const std::vector<int> &v)
 void State::absorb(State parent1, State parent2)
 {
 	std::fill(queens.begin(), queens.end(), -1);
+	std::fill(occupied_rows.begin(), occupied_rows.end(), false);
 	if (parent1.fitness.right_total < parent1.fitness.left_total)
-		std::reverse(parent1.queens.begin(), parent1.queens.end());
+		parent1.flip();
 	if (parent2.fitness.right_total < parent2.fitness.left_total)
-		std::reverse(parent2.queens.begin(), parent2.queens.end());
+		parent2.flip();
 	for (int i = 0; i < n / 2; i++)
-		queens[i] = parent1.queens[i];
+	{
+		if(~vacant(queens[i]))
+			move(i, parent1.queens[i]);
+	}
 	for (int i = n / 2; i < n; i++)
-		queens[i] = parent2.queens[i];
+	{
+		if (~vacant(queens[i]))
+			move(i, parent2.queens[i]);
+	}
+	fill_gaps();
 	compute_fitness();
+}
+
+int State::random_vacant_row()
+{
+	int row = rand() % n;
+	do
+	{
+		row = (row + 1) % n;
+	} while (occupied_rows[row] != false);
+	return row;
+}
+
+void State::fill_gaps()
+{
+	for (int col = 0; col < n; col++)
+	{
+		if (queens[col] == -1)
+			move(col, random_vacant_row());
+	}
+}
+
+void State::flip()
+{
+	std::reverse(queens.begin(), queens.end());
+	std::reverse(occupied_rows.begin(), occupied_rows.end());
+}
+
+bool State::vacant(int row)
+{
+	if (row == -1)
+		return true;
+	return ~occupied_rows[row];
 }

@@ -5,8 +5,8 @@
 int main(int argc, char const *argv[])
 {
 	srand(time(NULL));
-	/* int n, int pop_size, int max_generations, int segment_divisor */
-	Ga solver(100, 12, 1000000, 0);
+	/* int n, int pop_size, int max_generations*/
+	Ga solver(8, 12, 1000000);
 	int generations = solver.run();
 	std::cout << "Solution found in " << generations << " iterations" << std::endl;
 	return 0;

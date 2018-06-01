@@ -18,14 +18,14 @@ class State
 	private:
 	/* State data */
 	std::vector<int> queens;
-	int subset_divisor;
+	std::vector<bool> occupied_rows;
 
 	/* Helper functions */
 	//bool vacant_row(int row, int exclude_col);
 	//void fill_gaps();
-	void copy_fitness(const State &s);
+	int random_vacant_row();
+	void fill_gaps();
 
-	
 
 	public:
 	/* Member variables */
@@ -35,7 +35,7 @@ class State
 	/**
 	 * Constructor initialises the board with random queen positions
 	 **/
-	State(int n, int subset_divisor);
+	State(int n);
 	static void print_vect(const std::vector<int> &v);
 	/**
 	 * Copy constructor for initialising with another object
@@ -57,9 +57,13 @@ class State
 
 	void mutate(double chance);
 
+	void move(int index, int row);
+
 	//void absorb_diagonal(const State &parent1, const State &parent2);
 	void absorb(State parent1, State parent2);
 	
+	void flip();
+	bool vacant(int row);
 
 	void print();
 	

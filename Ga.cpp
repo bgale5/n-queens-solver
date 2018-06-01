@@ -3,10 +3,9 @@
 
 using State_ptr = std::shared_ptr<State>;
 
-Ga::Ga(int n, int pop_size, int max_generations, int segment_divisor)
+Ga::Ga(int n, int pop_size, int max_generations)
 {
 	this->pop_size = pop_size;
-	this->segment_divisor = segment_divisor;
 	this->pool_size = 2 * pop_size;
 	this->n = n;
 	this->max_generations = max_generations;
@@ -18,7 +17,7 @@ Ga::Ga(int n, int pop_size, int max_generations, int segment_divisor)
 void Ga::init_population()
 {
 	for (int i = 0; i < pool_size; i++)
-		population.push_back(State_ptr(new State(n, segment_divisor)));
+		population.push_back(State_ptr(new State(n)));
 }
 
 void Ga::crossover_all()
@@ -49,18 +48,18 @@ int Ga::run()
 	int generation;
 	for(generation = 0; generation < max_generations; generation++)
 	{
-		if (generation % 10000 == 0 && generation > 1)
+		if (generation % 100 == 0 && generation > 1)
 		{
 			std::cout << "Generation: " << generation << std::endl;
 			world_best->print();
 		}
 		crossover_all();
-		mutate_all();
 		std::sort(population.begin(), population.end(), comp);
 		population[pop_size - 1]->randomize();
 		world_best = population[0];
 		if (world_best->fitness.overall == 0)
 			break;
+		mutate_all();
 	}
 	std::cout << "Best State:" << std::endl;
 	world_best->print();
