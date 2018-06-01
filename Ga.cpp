@@ -7,10 +7,10 @@ Ga::Ga(int n, int pop_size, int max_generations, int segment_divisor)
 {
 	this->pop_size = pop_size;
 	this->segment_divisor = segment_divisor;
-	this->pool_size = pop_size + (pop_size * (pop_size - 1)) / 2;
+	this->pool_size = 2 * pop_size;
 	this->n = n;
 	this->max_generations = max_generations;
-	population.reserve(pop_size + (pop_size * (pop_size - 1)) / 2);
+	population.reserve(pool_size);
 	init_population();
 }
 
@@ -23,21 +23,24 @@ void Ga::init_population()
 
 void Ga::crossover_all()
 {
-	int counter = pop_size;
-	for (int i = 0; i < pop_size - 1; i++)
+	for (int i = pool_size - 1; i > pop_size; i--)
 	{
-		for (int j = i + 1; j < pop_size; j++)
-		{
-			State_ptr child = population[counter++];
-			child->absorb(*population[i], *population[j]);
-		}
+		State_ptr parent1 = population[rand() % pop_size];
+		State_ptr parent2 = population[rand() % pop_size];
+		population[i]->absorb(*parent1, *parent2);
 	}
 }
 
 void Ga::mutate_all()
 {
-	for (int i = 0; i < pool_size; i++)
-		population[i]->mutate((i + 1) / (double)(pool_size * 100));
+	// for (int i = 0; i < pool_size; i++)
+	// 	population[i]->mutate(10);
+	for (int i = 0; i < pop_size; i++)
+	{
+		int j = i + pop_size;
+		population[j] = population[i];
+		population[j]->mutate(100);
+	}
 }
 
 bool comp(const State_ptr s1, const State_ptr s2)
@@ -50,11 +53,11 @@ int Ga::run()
 	int generation;
 	for(generation = 0; generation < max_generations; generation++)
 	{
-		if (generation % 100 == 0 && generation > 1)
-		{
-			std::cout << "Generation: " << generation << std::endl;
-			world_best->print();
-		}
+		// if (generation % 100 == 0 && generation > 1)
+		// {
+		// 	std::cout << "Generation: " << generation << std::endl;
+		// 	world_best->print();
+		// }
 		crossover_all();
 		mutate_all();
 		std::sort(population.begin(), population.end(), comp);
