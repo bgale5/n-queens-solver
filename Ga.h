@@ -10,6 +10,7 @@ class Ga
 	int pop_size;
 	int pool_size;
 	int n;
+	int elite_subset;
 	int max_generations;
 	std::vector<std::shared_ptr<State> > population;
 	std::vector<std::shared_ptr<State> > pool;

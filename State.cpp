@@ -94,7 +94,8 @@ void State::mutate(double chance)
 	{
 		vect_iter first = queens.begin() + rand() % n;
 		vect_iter second = queens.begin() + rand() % n;
-		std::swap(first, second);
+		std::swap(*first, *second);
+		compute_fitness();
 	}
 }
 
@@ -127,13 +128,14 @@ void State::absorb(State parent1, State parent2)
 {
 	std::fill(queens.begin(), queens.end(), -1);
 	std::fill(occupied_rows.begin(), occupied_rows.end(), 0);
-	if (parent1.fitness.right_total < parent1.fitness.left_total)
-		parent1.flip();
-	if (parent2.fitness.right_total < parent2.fitness.left_total)
-		parent2.flip();
-	for (int i = 0; i < n / 2; i++)
+	int split_point = n / 2; //rand() % n;
+	// if (parent1.fitness.right_total < parent1.fitness.left_total)
+	// 	parent1.flip();
+	// if (parent2.fitness.right_total < parent2.fitness.left_total)
+	// 	parent2.flip();
+	for (int i = 0; i < split_point; i++)
 		move(i, parent1.queens[i]);
-	for (int i = n / 2; i < n; i++)
+	for (int i = split_point; i < n; i++)
 		move(i, parent2.queens[i]);
 	validate();
 	compute_fitness();
@@ -147,6 +149,12 @@ int State::random_vacant_row()
 		row = (row + 1) % n;
 	} while (occupied_rows[row] != 0);
 	return row;
+	// for (auto &row : occupied_rows)
+	// {
+	// 	if (row == 0)
+	// 		return row;
+	// }
+	//return -1; // Shouldn't reach this.
 }
 
 void State::validate()
@@ -166,6 +174,7 @@ void State::flip()
 {
 	std::reverse(queens.begin(), queens.end());
 	std::reverse(occupied_rows.begin(), occupied_rows.end());
+	std::swap(fitness.left_total, fitness.right_total);
 }
 
 bool State::vacant(int row)
