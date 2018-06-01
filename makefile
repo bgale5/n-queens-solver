@@ -1,4 +1,4 @@
-CFLAGS=-g -std=c++11 -Wextra -pedantic -Wno-unused-parameter
+CFLAGS=-O3 -std=c++11 -Wextra -pedantic -Wno-unused-parameter
 
 nqueens: main.o State.o Ga.o state.h
 	clang++ $(CFLAGS) -o nqueens main.o state.o Ga.o

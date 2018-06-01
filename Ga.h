@@ -23,6 +23,7 @@ class Ga
 	static State *find_best_state(std::vector<State> pop);
 	void crossover_all();
 	void mutate_all();
+	double time();
 };
 
 #endif

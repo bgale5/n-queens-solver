@@ -128,7 +128,7 @@ void State::absorb(State parent1, State parent2)
 {
 	std::fill(queens.begin(), queens.end(), -1);
 	std::fill(occupied_rows.begin(), occupied_rows.end(), 0);
-	int split_point = n / 2; //rand() % n;
+	int split_point =  rand() % n;// n / 2;
 	// if (parent1.fitness.right_total < parent1.fitness.left_total)
 	// 	parent1.flip();
 	// if (parent2.fitness.right_total < parent2.fitness.left_total)
@@ -149,12 +149,6 @@ int State::random_vacant_row()
 		row = (row + 1) % n;
 	} while (occupied_rows[row] != 0);
 	return row;
-	// for (auto &row : occupied_rows)
-	// {
-	// 	if (row == 0)
-	// 		return row;
-	// }
-	//return -1; // Shouldn't reach this.
 }
 
 void State::validate()

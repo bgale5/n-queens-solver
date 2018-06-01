@@ -1,5 +1,6 @@
 #include "Ga.h"
 #include <iostream>
+#include <ctime>
 
 using State_ptr = std::shared_ptr<State>;
 
@@ -66,4 +67,13 @@ int Ga::run()
 	std::cout << "Best State:" << std::endl;
 	world_best->print();
 	return generation;
+}
+
+double Ga::time()
+{
+	clock_t begin = clock();
+	run();
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	return elapsed_secs;
 }
