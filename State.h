@@ -2,14 +2,12 @@
 #define STATE_H
 #include <vector>
 
-using Board = std::vector<int>;
-
 /* Data Structures */
 typedef struct fitness
 {
-	unsigned left_total;
-	unsigned right_total;
-	unsigned overall;
+	int left_total;
+	int right_total;
+	int overall;
 } Fitness;
 
 /* The State class represents a board configuration */
@@ -41,7 +39,7 @@ class State
 	 * Copy constructor for initialising with another object
 	 **/
 	State(const State &s);
-
+	State(const std::vector<int> &board);
 	/**
 	 * Returns the number of diagonal conflicts
 	 * Fitness value is normalised with respect to length of diagonals
@@ -66,6 +64,7 @@ class State
 	bool vacant(int row);
 
 	void print();
+	std::vector<int> serialize();
 	
 	void operator=(const State &s); // For assignment
 };

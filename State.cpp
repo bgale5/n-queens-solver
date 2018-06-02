@@ -112,6 +112,41 @@ void State::print()
 	std::cout << "Address: " << this << std::endl;
 }
 
+std::vector<int> State::serialize()
+{
+	std::vector<int> board;
+	board.reserve(2 * n + 4);
+	// Get the metadata
+	board.push_back(n);
+	board.push_back(fitness.left_total);
+	board.push_back(fitness.right_total);
+	board.push_back(fitness.overall);
+	// Get the queens
+	for (auto &q : queens)
+		board.push_back(q);
+	// Get the occupied rows
+	for (auto &o : occupied_rows)
+		board.push_back(o);
+	return board;
+}
+
+State::State(const std::vector<int> &board)
+{
+	// Unpack the metadata
+	n = board[0];
+	queens.reserve(n);
+	occupied_rows.reserve(n);	
+	fitness.left_total = board[1];
+	fitness.right_total = board[2];
+	fitness.overall = board[3];
+	// Unpack the queens
+	for (int i = 4; i < n + 4; i++)
+		queens.push_back(board[i]);
+	// Unpack the occupied rows
+	for (int i = 4 + n; i < 2 * n + 4; i++)
+		occupied_rows.push_back(board[i]);
+}
+
 void State::print_vect(const std::vector<int> &v)
 {
 	std::cout << "[" << std::endl;
