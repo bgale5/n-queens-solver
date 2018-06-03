@@ -15,7 +15,6 @@ class State
 {
 	private:
 	/* State data */
-	std::vector<int> queens;
 	std::vector<int> occupied_rows;
 
 	/* Helper functions */
@@ -28,6 +27,8 @@ class State
 	public:
 	/* Member variables */
 	Fitness fitness;
+	std::vector<int> queens;
+
 	int n;
 	/* Public Member Functions */
 	/**

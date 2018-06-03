@@ -164,10 +164,6 @@ void State::absorb(State parent1, State parent2)
 	std::fill(queens.begin(), queens.end(), -1);
 	std::fill(occupied_rows.begin(), occupied_rows.end(), 0);
 	int split_point =  rand() % n;// n / 2;
-	// if (parent1.fitness.right_total < parent1.fitness.left_total)
-	// 	parent1.flip();
-	// if (parent2.fitness.right_total < parent2.fitness.left_total)
-	// 	parent2.flip();
 	for (int i = 0; i < split_point; i++)
 		move(i, parent1.queens[i]);
 	for (int i = split_point; i < n; i++)

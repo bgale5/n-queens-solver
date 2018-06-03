@@ -49,13 +49,9 @@ bool comp(const State_ptr s1, const State_ptr s2)
 int Ga::run()
 {
 	int generation;
+	clock_t begin = clock();
 	for(generation = 0; generation < max_generations; generation++)
 	{
-		// if (generation % 100 == 0 && generation > 1)
-		// {
-		// 	std::cout << "Generation: " << generation << std::endl;
-		// 	world_best->print();
-		// }
 		crossover_all();
 		mutate_all();
 		std::sort(population.begin(), population.end(), comp);
@@ -64,8 +60,13 @@ int Ga::run()
 		if (world_best->fitness.overall == 0)
 			break;
 	}
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "Best State:" << std::endl;
-	world_best->print();
+	//world_best->print();
+	State::print_vect(world_best->queens);
+	std::cout << "Solution found in " << generation << " iterations" << std::endl
+			  << "In " << elapsed_secs << "Seconds" << std::endl;
 	return generation;
 }
 
