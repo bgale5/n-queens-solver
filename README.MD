@@ -1,7 +1,7 @@
 # N-Queens Solver
 
 A genetic algorithm solution to the n-queens problem, in which n queens must be
-placed on an n by n chessboard such tat no quees are in conflict horizontally,
+placed on an n by n chessboard such that no quees are in conflict horizontally,
 vertically, or diagonally.
 
 ## Results
