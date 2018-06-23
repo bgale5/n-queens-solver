@@ -207,5 +207,5 @@ bool State::vacant(int row)
 {
 	if (row == -1)
 		return true;
-	return ~occupied_rows[row];
+	return !occupied_rows[row];
 }
