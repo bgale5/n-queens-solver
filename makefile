@@ -8,3 +8,5 @@ State.o: State.cpp
 	clang++ $(CFLAGS) -c State.cpp
 Ga.o: Ga.cpp
 	clang++ $(CFLAGS) -c Ga.cpp
+clean:
+	rm nqueens *.o

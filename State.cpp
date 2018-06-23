@@ -21,7 +21,7 @@ State::State(const State &s)
 	fitness.overall = s.fitness.overall;
 	fitness.left_total = s.fitness.left_total;
 	fitness.right_total = s.fitness.right_total;
-	for (int i=0; i<s.n; i++)
+	for (int i = 0; i < s.n; i++)
 	{
 		queens[i] = s.queens[i];
 		occupied_rows[i] = s.occupied_rows[i];
@@ -36,7 +36,7 @@ void State::operator=(const State &s)
 	fitness.overall = s.fitness.overall;
 	fitness.left_total = s.fitness.left_total;
 	fitness.right_total = s.fitness.right_total;
-	for (int i=0; i<s.n; i++)
+	for (int i = 0; i < s.n; i++)
 	{
 		queens[i] = s.queens[i];
 		occupied_rows[i] = s.occupied_rows[i];
@@ -58,11 +58,11 @@ void State::compute_fitness()
 			fitness.left_total++;
 		else
 			fitness.right_total++;
-		left_diagonal[i+queens[i]]++;
-		right_diagonal[(n-1)-i+queens[i]]++;
+		left_diagonal[i + queens[i]]++;
+		right_diagonal[(n - 1) - i + queens[i]]++;
 	}
 	// Count the diagonal conflicts
-	for (int i = 0; i < 2*n-1; i++)
+	for (int i = 0; i < 2 * n - 1; i++)
 	{
 		if (left_diagonal[i] > 1)
 			fitness.overall += left_diagonal[i] - 1;
@@ -105,7 +105,8 @@ void State::print()
 	{
 		for (int j = 0; j < n; j++)
 			std::cout << (queens[j] == i ? "Q   " : "*   ");
-		std::cout << std::endl << std::endl;
+		std::cout << std::endl
+				  << std::endl;
 	}
 	print_vect(queens);
 	std::cout << "Overall fitness: " << fitness.overall << std::endl;
@@ -135,7 +136,7 @@ State::State(const std::vector<int> &board)
 	// Unpack the metadata
 	n = board[0];
 	queens.reserve(n);
-	occupied_rows.reserve(n);	
+	occupied_rows.reserve(n);
 	fitness.left_total = board[1];
 	fitness.right_total = board[2];
 	fitness.overall = board[3];
@@ -163,7 +164,7 @@ void State::absorb(State parent1, State parent2)
 {
 	std::fill(queens.begin(), queens.end(), -1);
 	std::fill(occupied_rows.begin(), occupied_rows.end(), 0);
-	int split_point =  rand() % n;// n / 2;
+	int split_point = rand() % n; // n / 2;
 	for (int i = 0; i < split_point; i++)
 		move(i, parent1.queens[i]);
 	for (int i = split_point; i < n; i++)
@@ -186,7 +187,7 @@ void State::validate()
 {
 	std::vector<int> indices;
 	for (int i = 0; i < n; i++)
-		indices.push_back(i); 
+		indices.push_back(i);
 	std::random_shuffle(indices.begin(), indices.end()); // Random order to remove bias
 	for (int &i : indices)
 	{

@@ -15,7 +15,6 @@ Ga::Ga(int n, int pop_size, int max_generations)
 	init_population();
 }
 
-
 void Ga::init_population()
 {
 	for (int i = 0; i < pool_size; i++)
@@ -36,7 +35,6 @@ void Ga::mutate_all()
 {
 	for (int i = 0; i < pop_size; i++)
 	{
-		//population[i]->mutate((i + 1) * 5);
 		population[i]->mutate(100);
 	}
 }
@@ -50,7 +48,7 @@ int Ga::run()
 {
 	int generation;
 	clock_t begin = clock();
-	for(generation = 0; generation < max_generations; generation++)
+	for (generation = 0; generation < max_generations; generation++)
 	{
 		crossover_all();
 		mutate_all();
@@ -63,7 +61,6 @@ int Ga::run()
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "Best State:" << std::endl;
-	//world_best->print();
 	State::print_vect(world_best->queens);
 	std::cout << "Solution found in " << generation << " iterations" << std::endl
 			  << "In " << elapsed_secs << "Seconds" << std::endl;

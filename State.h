@@ -13,7 +13,7 @@ typedef struct fitness
 /* The State class represents a board configuration */
 class State
 {
-	private:
+  private:
 	/* State data */
 	std::vector<int> occupied_rows;
 
@@ -23,22 +23,15 @@ class State
 	int random_vacant_row();
 	void validate();
 
-
-	public:
+  public:
 	/* Member variables */
 	Fitness fitness;
 	std::vector<int> queens;
 
 	int n;
 	/* Public Member Functions */
-	/**
-	 * Constructor initialises the board with random queen positions
-	 **/
 	State(int n);
 	static void print_vect(const std::vector<int> &v);
-	/**
-	 * Copy constructor for initialising with another object
-	 **/
 	State(const State &s);
 	State(const std::vector<int> &board);
 	/**
@@ -60,13 +53,13 @@ class State
 
 	//void absorb_diagonal(const State &parent1, const State &parent2);
 	void absorb(State parent1, State parent2);
-	
+
 	void flip();
 	bool vacant(int row);
 
 	void print();
 	std::vector<int> serialize();
-	
+
 	void operator=(const State &s); // For assignment
 };
 

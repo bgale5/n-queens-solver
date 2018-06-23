@@ -13,7 +13,6 @@ int main(int argc, char const *argv[])
 	int n = atoi(argv[1]);
 	/* int n, int pop_size, int max_generations*/
 	Ga solver(n, 12, 1000000);
-	//int generations = solver.run();
 	solver.run();
 	return 0;
 }
